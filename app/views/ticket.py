@@ -6,8 +6,18 @@ from app.forms import TicketForm
 # @login_required(login_url='login_index')
 def index(request):
     tickets = Ticket.objects.all()
-  
-    context = {'tickets': tickets}
+    categories = Category.objects.all()
+    
+    category = request.GET.get('category')
+    
+    if category == None:
+        tickets = Ticket.objects.order_by('-price').filter(status = True)
+    else:
+        tickets = Ticket.objects.filter(categorie__description = category)
+    
+    
+        
+    context = {'tickets': tickets, 'categories': categories}
     
     return render(request, 'app/tickets/index.html', context)
   
